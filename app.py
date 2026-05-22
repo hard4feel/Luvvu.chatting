@@ -112,10 +112,10 @@ if user_input := st.chat_input("Написать Эве..."):
     st.session_state.messages.append({"role": "user", "content": user_input})
     st.markdown(f'<div class="chat-row user-row"><div class="chat-bubble user-bubble">{user_input}</div></div>', unsafe_allow_html=True)
     
-    # Отправляем всю историю на генерацию модели Llama 3
+    # Отправляем всю историю на генерацию актуальной модели Llama 3.3
     try:
         completion = client.chat.completions.create(
-            model="llama3-70b-8192", 
+            model="llama-3.3-70b-versatile",  # Рабочая и мощная модель
             messages=st.session_state.messages,
             temperature=0.85,
             max_tokens=800,
