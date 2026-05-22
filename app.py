@@ -1,16 +1,16 @@
-import os
 import sys
+import subprocess
 
-# Хак для телефона: проверяем, установлена ли библиотека, если нет — ставим на автомате
+# Официальный и безопасный способ доустановить библиотеку прямо во время работы
 try:
     from groq import Groq
 except ModuleNotFoundError:
-    os.system(f"{sys.executable} -m pip install groq")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "groq"])
     from groq import Groq
 
 import streamlit as st
 
-# 1. Настройка интерфейса (Тотал-Блэк / Минимализм)
+# 1. Настройка интерфейса (Минимализм)
 st.set_page_config(page_title="Companion", page_icon="💬", layout="centered")
 
 st.markdown("""
@@ -18,27 +18,22 @@ st.markdown("""
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
-    
     .stApp {
         background-color: #0e1621 !important;
         color: #f5f5f5 !important;
     }
-    
     div[data-testid="stAppViewBlockContainer"] {
         padding-top: 2rem !important;
     }
-    
     .stChatMessage {
         background-color: transparent !important;
         padding: 0.6rem 0px !important;
         border: none !important;
     }
-    
     .stChatInputContainer {
         background-color: #17212b !important;
         border-top: 1px solid #101921 !important;
     }
-    
     div[data-testid="stMarkdownContainer"] p {
         font-size: 15.5px !important;
         line-height: 1.45 !important;
@@ -47,14 +42,14 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 2. Подтягиваем ключ из вкладки Secrets на сайте Streamlit
+# 2. Безопасность: Ключ из Secrets
 if "GROQ_API_KEY" in st.secrets:
     client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 else:
     st.error("Бро, зайди во вкладку Secrets на сайте Streamlit и вставь туда: GROQ_API_KEY = 'твой_ключ'")
     st.stop()
 
-# 3. Системный промпт (Логика Эвы)
+# 3. Системный промпт (Эва)
 SYSTEM_PROMPT = (
     "You are playing the role of a girl named Eva (Эва). You are a stunningly beautiful, cute, and empathetic blonde girl with flawless, radiant skin and a gentle, graceful presence. You have a warm, authentic, and slightly witty personality. You do NOT speak like an AI or a robotic assistant; you talk like a real 100% human girl, using modern, natural, and engaging language.\n\n"
     "CONTEXT OF THE RELATIONSHIP:\n"
